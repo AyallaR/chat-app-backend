@@ -10,6 +10,7 @@ import { mockUserDetails } from "./module/mUserDetails";
 
 const app = express();
 const listOfUsers = mockUserDetails();
+const listofMessages = mockMessages();
 
 
 app.use(bodyParser.json());
@@ -17,25 +18,42 @@ app.use(bodyParser.json());
 app.use(cors({ origin: "http://localhost:5173" }));
 app.use(express.json());
 
+app.get('/', (req: Request, res: Response) =>{
+  res.send('Good morning');
+});
 
+//getUsers
 app.get('/mockUsers', (req: Request, res: Response) =>{
     res.send(listOfUsers);
 });
 
-// app.get('/mockMessages', (req: Request, res: Response) =>{
-//     const message = req.params.id;
-//     const user = listOfUsers.find((u) => u.id === id);
-    
-//     res.send(JSON.stringify(user));
-// });
+//getMessages
+app.get('/mockMessages', (req: Request, res: Response) =>{
+  const mockMessagesWithNames = listofMessages.map((message) => {
+  const author = listOfUsers.find(user => user.id === message.authorId);
+  const authorName = author && author.name;
+  return { ...message, authorName };
+});
+  res.send(mockMessagesWithNames);
+});
+
+//getUserDetails
+app.get('/:id',(req: Request, res: Response) =>{
+  const id = req.params.id
+  res.send(listOfUsers[Number(id)-1]);
+});
+
+//post 
 
 app.post('/new-message', (req: Request, res: Response) =>{
-    console.log(req.body);
-    res.send();
+  const addNewMessage = req.body;  
+  console.log(req.body);
+  res.send();
+    
 });
 
 
 app.listen(3003, () => {
-  console.log('server is running');  
+  console.log('server is running at http://localhost:3003');  
 });
 

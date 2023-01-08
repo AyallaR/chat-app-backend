@@ -1,4 +1,5 @@
-export const mockMessages = [
+
+export const mockMessages = () => [
   {
     "authorId": 3,
     "id": 1,
